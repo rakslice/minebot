@@ -162,15 +162,18 @@ public class WorldData {
 	}
 
 	public IBlockState getBlockState(BlockPos pos) {
-		IBlockState iblockstate = (IBlockState) Block.BLOCK_STATE_IDS
-				.getByValue(getBlockIdWithMeta(pos));
+		
+//		IBlockState iblockstate = (IBlockState) Block.BLOCK_STATE_IDS
+//				.getByValue(getBlockIdWithMeta(pos));
+		IBlockState iblockstate = theWorld.getBlockState(pos);
 		return iblockstate != null ? iblockstate : Blocks.AIR.getDefaultState();
 	}
 
 	public boolean isSideTorch(BlockPos pos) {
 		int id = getBlockIdWithMeta(pos);
 		// TODO: Convert this to a block set.
-		return BlockSets.TORCH.containsWithMeta(id)
+		boolean sideTorch = BlockSets.TORCH.containsWithMeta(id);
+		return sideTorch
 				&& getBlockState(pos).getValue(BlockTorch.FACING) != EnumFacing.UP;
 	}
 
