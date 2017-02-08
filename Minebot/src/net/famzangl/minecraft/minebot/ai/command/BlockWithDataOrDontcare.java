@@ -72,13 +72,13 @@ public abstract class BlockWithDataOrDontcare {
 			return AIR;
 		}
 
-		Block block = (Block) Block.blockRegistry.getObject(new ResourceLocation(matcher.group(1)));
-		if (block == null || block == Blocks.air) {
+		Block block = (Block) Block.REGISTRY.getObject(new ResourceLocation(matcher.group(1)));
+		if (block == null || block == Blocks.AIR) {
 			// minecraft:dirt case
-			block = (Block) Block.blockRegistry.getObject(new ResourceLocation(blockWithMeta));
+			block = (Block) Block.REGISTRY.getObject(new ResourceLocation(blockWithMeta));
 			matcher = null;
 		}
-		if (block == null || block == Blocks.air) {
+		if (block == null || block == Blocks.AIR) {
 			throw new IllegalBlockNameException(
 					"Could not understand block name: " + blockWithMeta);
 		} else if (matcher == null || matcher.group(2) == null
@@ -93,13 +93,13 @@ public abstract class BlockWithDataOrDontcare {
 	}
 
 	public static ArrayList<String> getAllStrings() {
-		Set<ResourceLocation> keys = Block.blockRegistry.getKeys();
+		Set<ResourceLocation> keys = Block.REGISTRY.getKeys();
 		ArrayList<String> strings = new ArrayList<String>();
 		for (ResourceLocation k : keys) {
 			// candidate found
 			strings.add(k.toString());
 
-			Block b = (Block) Block.blockRegistry.getObject(k);
+			Block b = (Block) Block.REGISTRY.getObject(k);
 			HashSet<IBlockState> states = new HashSet<IBlockState>();
 			for (int i = 0; i < 16; i++) {
 				try {
@@ -139,7 +139,7 @@ public abstract class BlockWithDataOrDontcare {
 
 	protected String getBlockString() {
 		Block block = getBlock();
-		final ResourceLocation name = ((ResourceLocation) Block.blockRegistry
+		final ResourceLocation name = ((ResourceLocation) Block.REGISTRY
 				.getNameForObject(block));
 		String domain = name.getResourceDomain().equals("minecraft") ? ""
 				: name.getResourceDomain() + ":";

@@ -22,7 +22,13 @@ import net.famzangl.minecraft.minebot.ai.tools.rate.NotRater;
 import net.famzangl.minecraft.minebot.ai.tools.rate.OrRater;
 import net.famzangl.minecraft.minebot.ai.tools.rate.Rater;
 import net.famzangl.minecraft.minebot.settings.MinebotSettings;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentData;
+import net.minecraft.enchantment.EnchantmentDurability;
+import net.minecraft.enchantment.EnchantmentLootBonus;
+import net.minecraft.enchantment.EnchantmentUntouching;
+import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemAxe;
@@ -35,8 +41,11 @@ import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
+import net.minecraft.util.ResourceLocation;
 
 import com.google.gson.Gson;
+
+import akka.japi.Effect;
 
 /**
  * This class rates tools.
@@ -153,13 +162,12 @@ public class ToolRater {
 		}
 	}
 
-	private static final Hashtable<String, Integer> ENCHANTMENTS = new Hashtable<String, Integer>();
+	private static final Hashtable<String, Enchantment> ENCHANTMENTS = new Hashtable<String, Enchantment>();
 
 	static {
-		ENCHANTMENTS.put("efficiency", Enchantment.efficiency.effectId);
-		ENCHANTMENTS.put("fortune", Enchantment.fortune.effectId);
-		ENCHANTMENTS.put("unbreaking", Enchantment.unbreaking.effectId);
-		ENCHANTMENTS.put("silk_touch", Enchantment.silkTouch.effectId);
+		for (String resName: new String[] {"efficiency", "fortune", "unbreaking", "silk_touch"}) {
+			ENCHANTMENTS.put(resName, Enchantment.REGISTRY.getObject(new ResourceLocation(resName)));
+		}
 	}
 
 	private static final Hashtable<String, ItemFilter> FILTERS = new Hashtable<String, ItemFilter>();
@@ -173,7 +181,7 @@ public class ToolRater {
 		FILTERS.put("stone", new ItemMaterial(ToolMaterial.STONE));
 		FILTERS.put("gold", new ItemMaterial(ToolMaterial.GOLD));
 		FILTERS.put("iron", new ItemMaterial(ToolMaterial.IRON));
-		FILTERS.put("diamond", new ItemMaterial(ToolMaterial.EMERALD));
+		FILTERS.put("diamond", new ItemMaterial(ToolMaterial.DIAMOND));
 		for (ToolType tt : ToolType.values()) {
 			FILTERS.put(tt.getName(), tt);
 		}
@@ -229,7 +237,7 @@ public class ToolRater {
 			return new MatchesRater(name, values);
 		}
 
-		Integer enchantmentId = ENCHANTMENTS.get(name);
+		Enchantment enchantmentId = ENCHANTMENTS.get(name);
 		if (enchantmentId != null) {
 			return new MultiplyEnchantmentRater(enchantmentId, name, values);
 		}
@@ -263,10 +271,10 @@ public class ToolRater {
 		return Collections.unmodifiableList(raters);
 	}
 
-	public float rateTool(ItemStack stack, int forBlockAndMeta) {
+	public float rateTool(ItemStack stack, int forBlockAndMeta, IBlockState forBlockState) {
 		float f = 1;
 		for (Rater rater : raters) {
-			f *= rater.rate(stack, forBlockAndMeta);
+			f *= rater.rate(stack, forBlockAndMeta, forBlockState);
 		}
 		return f;
 	}

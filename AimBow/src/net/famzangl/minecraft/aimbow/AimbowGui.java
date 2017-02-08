@@ -28,28 +28,28 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
 import net.famzangl.minecraft.aimbow.aiming.ColissionData;
-import net.famzangl.minecraft.aimbow.aiming.BowColissionSolver;
 import net.famzangl.minecraft.aimbow.aiming.ColissionSolver;
 import net.famzangl.minecraft.aimbow.aiming.ReverseBowSolver;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.ChunkRenderContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.chunk.RenderChunk;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.EnumWorldBlockLayer;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumHand;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class AimbowGui extends GuiIngame {
 	FloatBuffer modelBuffer = BufferUtils.createFloatBuffer(16);
@@ -76,16 +76,26 @@ public class AimbowGui extends GuiIngame {
 		this.partialTicks = partialTicks;
 		super.renderGameOverlay(partialTicks);
 	}
+	
+	@SubscribeEvent
+	public void onRender(RenderGameOverlayEvent.Post event) {
+		if (event.getType().equals(RenderGameOverlayEvent.ElementType.ALL)) {
+			boolean allowNormalCrosshair = showCrosshair();
+			if (!allowNormalCrosshair) {
+				event.setCanceled(true);
+			}
+		}
+	}
 
-	@Override
+	//@Override
 	protected boolean showCrosshair() {
 		EntityPlayerSP player = mc.thePlayer;
-		ItemStack heldItem = player.getHeldItem();
+		ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
 		ColissionSolver colissionSolver = ColissionSolver.forItem(heldItem, mc);
 		if (colissionSolver != null) {
 			checkForMatrixStealing();
-			final ScaledResolution resolution = new ScaledResolution(this.mc,
-					this.mc.displayWidth, this.mc.displayHeight);
+			final ScaledResolution resolution = new ScaledResolution(this.mc);
+			// FIXME wht do we do with this.mc.displayWidth, this.mc.displayHeight since ScaledResolution constructor doesn't take them anymore?
 			boolean colissionDrawn = false;
 			ArrayList<ColissionData> colissionPoints = colissionSolver
 					.computeCurrentColissionPoints();
@@ -95,7 +105,7 @@ public class AimbowGui extends GuiIngame {
 				//System.out.println("Hitpoint: " + p + " is on screen: " + pos);
 				boolean hit = p.hitEntity != null;
 				drawCrosshairAt(mc, pos.x, pos.y, hit ? 0 : 1, hit ? 1 : 0, 0);
-				zc.zoomTowards(new Vec3(p.x, p.y, p.z));
+				zc.zoomTowards(new Vec3d(p.x, p.y, p.z));
 				if (!colissionDrawn && !hit && autoAim
 						&& shouldAutoaim(heldItem)) {
 					aimAtCloseEntity(pos, resolution, colissionSolver);
@@ -120,9 +130,12 @@ public class AimbowGui extends GuiIngame {
 			// }
 			// zc.apply(f1);
 			// }
+			
 			return false;
+			
 		} else {
-			return super.showCrosshair();
+			// return super.showCrosshair();
+			return true;
 		}
 	}
 
@@ -147,7 +160,7 @@ public class AimbowGui extends GuiIngame {
 
 	private boolean shouldAutoaim(ItemStack heldItem) {
 		int count = mc.thePlayer.getItemInUseCount();
-		return heldItem.getItem() != Items.bow || count > 0;
+		return heldItem.getItem() != Items.BOW || count > 0;
 	}
 
 	private void drawCrosshairAt(Minecraft mc, int x, int y, float r, float g,
@@ -174,24 +187,38 @@ public class AimbowGui extends GuiIngame {
 			int par5, int par6, float r, float g, float b) {
 		float f = 0.00390625F;
 		float f1 = 0.00390625F;
-		WorldRenderer tessellator = Tessellator.getInstance()
-				.getWorldRenderer();
-		tessellator.startDrawingQuads();
-		tessellator.setColorRGBA_F(r, g, b, .5f);
-		tessellator.addVertexWithUV(par1 + 0, par2 + par6, this.zLevel,
-				(par3 + 0) * f, (par4 + par6) * f1);
-		tessellator.addVertexWithUV(par1 + par5, par2 + par6, this.zLevel,
-				(par3 + par5) * f, (par4 + par6) * f1);
-		tessellator.addVertexWithUV(par1 + par5, par2 + 0, this.zLevel,
-				(par3 + par5) * f, (par4 + 0) * f1);
-		tessellator.addVertexWithUV(par1 + 0, par2 + 0, this.zLevel, (par3 + 0)
-				* f, (par4 + 0) * f1);
-		Tessellator.getInstance().draw();
+
+		
+		Tessellator tessellator = Tessellator.getInstance();
+		VertexBuffer buffer = tessellator
+				.getBuffer();
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+		//tessellator.startDrawingQuads();
+		//tessellator.setColorRGBA_F(r, g, b, .5f);
+		//tessellator.color(r, g, b, .5f)
+		//tessellator.addVertexWithUV(par1 + 0, par2 + par6, this.zLevel,
+				//(par3 + 0) * f, (par4 + par6) * f1);
+		buffer.pos(par1 + 0, par2 + par6, this.zLevel).tex((par3 + 0) * f, (par4 + par6) * f1).color(r, g, b, .5f).endVertex();
+//		tessellator.addVertexWithUV(par1 + 0, par2 + par6, this.zLevel,
+//		(par3 + 0) * f, (par4 + par6) * f1);
+		buffer.pos(par1 + 0, par2 + par6, this.zLevel).tex((par3 + 0) * f, (par4 + par6) * f1).color(r, g, b, .5f).endVertex();
+		
+//		buffer.addVertexWithUV(par1 + par5, par2 + par6, this.zLevel,
+//				(par3 + par5) * f, (par4 + par6) * f1);
+		buffer.pos(par1 + par5, par2 + par6, this.zLevel).tex((par3 + par5) * f, (par4 + par6) * f1).color(r, g, b, .5f).endVertex();
+//		buffer.addVertexWithUV(par1 + par5, par2 + 0, this.zLevel,
+//				(par3 + par5) * f, (par4 + 0) * f1);
+		buffer.pos(par1 + par5, par2 + 0, this.zLevel).tex((par3 + par5) * f, (par4 + 0) * f1).color(r, g, b, .5f).endVertex();
+//		buffer.addVertexWithUV(par1 + 0, par2 + 0, this.zLevel, (par3 + 0)
+//				* f, (par4 + 0) * f1);
+		buffer.pos(par1 + 0, par2 + 0, this.zLevel).tex((par3 + 0) * f, (par4 + 0) * f1).color(r, g, b, .5f).endVertex();
+		//Tessellator.getInstance().draw();
+		tessellator.draw();
 	}
 
 	public Pos2 getPositionOnScreen(Minecraft mc, double x, double y, double z,
 			ScaledResolution resolution) {
-		Vec3 player = mc.getRenderViewEntity().getPositionEyes(partialTicks);
+		Vec3d player = mc.getRenderViewEntity().getPositionEyes(partialTicks);
 		viewPort.rewind();
 		viewPort.put(0);
 		viewPort.put(0);
@@ -268,7 +295,7 @@ public class AimbowGui extends GuiIngame {
 
 		for (CloseEntity e : nearEntities) {
 			// System.out.println("Try to hit " + e);
-			Vec3 look = rbs.getLookForTarget(e.entity);
+			Vec3d look = rbs.getLookForTarget(e.entity);
 			ArrayList<ColissionData> foundColissions = colissionSolver
 					.computeColissionWithLook(look);
 			if (foundColissions.size() > 0
@@ -283,7 +310,7 @@ public class AimbowGui extends GuiIngame {
 		}
 	}
 
-	private void lookAt(Vec3 look) {
+	private void lookAt(Vec3d look) {
 		final double d0 = look.xCoord;
 		final double d1 = look.zCoord;
 		final double d2 = look.yCoord;
@@ -312,7 +339,7 @@ public class AimbowGui extends GuiIngame {
 		ChunkRenderContainer base;
 
 		public void addRenderChunk(RenderChunk p_178002_1_,
-				EnumWorldBlockLayer p_178002_2_) {
+				BlockRenderLayer p_178002_2_) {
 			base.addRenderChunk(p_178002_1_, p_178002_2_);
 		}
 
@@ -333,7 +360,7 @@ public class AimbowGui extends GuiIngame {
 			base.preRenderChunk(p_178003_1_);
 		}
 
-		public void renderChunkLayer(EnumWorldBlockLayer p_178001_1_) {
+		public void renderChunkLayer(BlockRenderLayer p_178001_1_) {
 			if (catcher == this) {
 				stealProjectionMatrix();
 			}

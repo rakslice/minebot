@@ -47,7 +47,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import org.apache.logging.log4j.LogManager;
@@ -252,7 +252,7 @@ public class CraftStrategy extends PathFinderStrategy {
 
 	public final static class CraftingTableHandler extends
 			RangeBlockHandler<CraftingTableData> {
-		private static final BlockSet IDS = new BlockSet(Blocks.crafting_table);
+		private static final BlockSet IDS = new BlockSet(Blocks.CRAFTING_TABLE);
 
 		private final Hashtable<BlockPos, CraftingTableData> found = new Hashtable<BlockPos, CraftingTableData>();
 
@@ -353,7 +353,7 @@ public class CraftStrategy extends PathFinderStrategy {
 			addTask(new UseItemOnBlockAtTask(table.pos) {
 				@Override
 				protected boolean isBlockAllowed(AIHelper h, BlockPos pos) {
-					return h.getBlock(pos) == Blocks.crafting_table;
+					return h.getBlock(pos) == Blocks.CRAFTING_TABLE;
 				}
 
 				@Override
@@ -406,7 +406,7 @@ public class CraftStrategy extends PathFinderStrategy {
 			int count = 0;
 			for (ItemStack s : helper.getMinecraft().thePlayer.inventory.mainInventory) {
 				if (itemWithSubtype.equals(ItemWithSubtype.fromStack(s))) {
-					count += s.stackSize;
+					count += s.func_190916_E();
 				}
 			}
 			return count;
@@ -431,7 +431,7 @@ public class CraftStrategy extends PathFinderStrategy {
 						continue;
 					}
 					ItemWithSubtype item = new ItemWithSubtype(i);
-					int leftOver = i.stackSize;
+					int leftOver = i.func_190916_E();
 					for (int x = 0; x < 3 && leftOver > 0; x++) {
 						for (int y = 0; y < 3 && leftOver > 0; y++) {
 							if (p.goodForPosition(item, x, y)

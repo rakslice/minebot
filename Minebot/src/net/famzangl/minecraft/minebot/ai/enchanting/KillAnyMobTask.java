@@ -19,7 +19,7 @@ package net.famzangl.minecraft.minebot.ai.enchanting;
 import net.famzangl.minecraft.minebot.ai.AIHelper;
 import net.famzangl.minecraft.minebot.ai.task.AITask;
 import net.famzangl.minecraft.minebot.ai.task.TaskOperations;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.RayTraceResult;
 
 public class KillAnyMobTask extends AITask {
 
@@ -27,9 +27,9 @@ public class KillAnyMobTask extends AITask {
 
 	@Override
 	public boolean isFinished(AIHelper h) {
-		final MovingObjectPosition objectMouseOver = h.getObjectMouseOver();
+		final RayTraceResult objectMouseOver = h.getObjectMouseOver();
 		return objectMouseOver == null
-				|| objectMouseOver.typeOfHit != MovingObjectPosition.MovingObjectType.ENTITY;
+				|| objectMouseOver.typeOfHit != RayTraceResult.Type.ENTITY;
 	}
 
 	@Override

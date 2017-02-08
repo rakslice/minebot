@@ -21,6 +21,7 @@ import net.famzangl.minecraft.minebot.ai.task.AITask;
 import net.famzangl.minecraft.minebot.ai.task.TaskOperations;
 import net.famzangl.minecraft.minebot.ai.task.error.StringTaskError;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
 
 import org.apache.logging.log4j.Marker;
@@ -159,7 +160,7 @@ public abstract class MoveInInventoryTask extends AITask {
 		System.out.println("Click on " + slotNumber + " using " + i);
 		final GuiContainer screen = (GuiContainer) h.getMinecraft().currentScreen;
 		h.getMinecraft().playerController.windowClick(
-				screen.inventorySlots.windowId, slotNumber, i, 0,
+				screen.inventorySlots.windowId, slotNumber, i, ClickType.PICKUP,
 				h.getMinecraft().thePlayer);
 	}
 
@@ -175,7 +176,7 @@ public abstract class MoveInInventoryTask extends AITask {
 	}
 
 	protected int getSlotContentCount(Slot slot) {
-		return slot.getHasStack() ? slot.getStack().stackSize : 0;
+		return slot.getHasStack() ? slot.getStack().func_190916_E() : 0;
 	}
 
 	protected static int convertPlayerInventorySlot(int inventorySlot) {

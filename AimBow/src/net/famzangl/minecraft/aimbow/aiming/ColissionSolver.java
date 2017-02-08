@@ -23,8 +23,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 
 public abstract class ColissionSolver {
 
@@ -46,7 +46,7 @@ public abstract class ColissionSolver {
 			}
 			s.moveTick();
 
-			MovingObjectPosition hit = computeHit(s, tick);
+			RayTraceResult hit = computeHit(s, tick);
 			if (hit != null) {
 				// System.out.println("Hit: " + hit.entityHit + " at " +
 				// hit.hitVec.xCoord + ","+
@@ -61,7 +61,7 @@ public abstract class ColissionSolver {
 		}
 	}
 
-	protected abstract MovingObjectPosition computeHit(RayData s, int tick);
+	protected abstract RayTraceResult computeHit(RayData s, int tick);
 
 	private void generateRays(Entity entity) {
 		simulated.clear();
@@ -77,7 +77,7 @@ public abstract class ColissionSolver {
 		return colissions;
 	}
 
-	public ArrayList<ColissionData> computeColissionWithLook(Vec3 look) {
+	public ArrayList<ColissionData> computeColissionWithLook(Vec3d look) {
 		colissions = new ArrayList<ColissionData>();
 		simulated.clear();
 		RayData data = generateRayData();
@@ -98,9 +98,9 @@ public abstract class ColissionSolver {
 	public static ColissionSolver forItem(ItemStack heldItem, Minecraft mc) {
 		if (heldItem == null) {
 			return null;
-		} else if (heldItem.getItem() == Items.snowball || heldItem.getItem() == Items.egg) {
+		} else if (heldItem.getItem() == Items.SNOWBALL || heldItem.getItem() == Items.EGG) {
 			return new ThrowableColissionSolver(mc, (EntityLivingBase) mc.getRenderViewEntity());
-		} else if (heldItem.getItem() == Items.bow) {
+		} else if (heldItem.getItem() == Items.BOW) {
 			return new BowColissionSolver(mc, (EntityLivingBase) mc.getRenderViewEntity());
 		}
 		return null;

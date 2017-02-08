@@ -21,10 +21,9 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 
 /**
  * This is an incremental colission solver.
@@ -40,18 +39,18 @@ public class BowColissionSolver extends ColissionSolver {
 	public BowColissionSolver(Minecraft mc, EntityLivingBase renderViewEntity) {
 		super(mc, renderViewEntity);
 	}
+	
+	protected RayTraceResult computeHit(RayData s, int tick) {
+		Vec3d Vec3d1 = new Vec3d(s.prevPosX, s.prevPosY, s.prevPosZ);
+		Vec3d Vec3d = new Vec3d(s.posX, s.posY, s.posZ);
+		RayTraceResult hit = minecraft.theWorld.rayTraceBlocks(Vec3d1,
+				Vec3d, false, true, false);
 
-	protected MovingObjectPosition computeHit(RayData s, int tick) {
-		Vec3 vec31 = new Vec3(s.prevPosX, s.prevPosY, s.prevPosZ);
-		Vec3 vec3 = new Vec3(s.posX, s.posY, s.posZ);
-		MovingObjectPosition hit = minecraft.theWorld.rayTraceBlocks(vec31,
-				vec3, false, true, false);
-
-		vec31 = new Vec3(s.prevPosX, s.prevPosY, s.prevPosZ);
+		Vec3d1 = new Vec3d(s.prevPosX, s.prevPosY, s.prevPosZ);
 		if (hit == null) {
-			vec3 = new Vec3(s.posX, s.posY, s.posZ);
+			Vec3d = new Vec3d(s.posX, s.posY, s.posZ);
 		} else {
-			vec3 = new Vec3(hit.hitVec.xCoord, hit.hitVec.yCoord,
+			Vec3d = new Vec3d(hit.hitVec.xCoord, hit.hitVec.yCoord,
 					hit.hitVec.zCoord);
 		}
 
@@ -67,14 +66,14 @@ public class BowColissionSolver extends ColissionSolver {
 				float f1 = 0.3F;
 				AxisAlignedBB axisalignedbb1 = e.getEntityBoundingBox().expand(
 						(double) f1, (double) f1, (double) f1);
-				MovingObjectPosition movingobjectposition1 = axisalignedbb1
-						.calculateIntercept(vec31, vec3);
+				RayTraceResult RayTraceResult1 = axisalignedbb1
+						.calculateIntercept(Vec3d1, Vec3d);
 
-				if (movingobjectposition1 != null) {
-					double d1 = vec31.distanceTo(movingobjectposition1.hitVec);
+				if (RayTraceResult1 != null) {
+					double d1 = Vec3d1.distanceTo(RayTraceResult1.hitVec);
 
 					if (d1 < d0 || d0 == 0.0D) {
-						hit = movingobjectposition1;
+						hit = RayTraceResult1;
 						hit.entityHit = e;
 						d0 = d1;
 					}

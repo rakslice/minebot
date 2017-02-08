@@ -18,8 +18,8 @@ package net.famzangl.minecraft.minebot.ai.task;
 
 import net.famzangl.minecraft.minebot.ai.AIHelper;
 import net.famzangl.minecraft.minebot.ai.ItemFilter;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 
 /**
  * Uses an item on something. Use subclases to define what to use it for.
@@ -53,9 +53,9 @@ public abstract class UseItemTask extends AITask {
 				}
 			}
 
-			final MovingObjectPosition objectMouseOver = h.getObjectMouseOver();
+			final RayTraceResult objectMouseOver = h.getObjectMouseOver();
 			if (objectMouseOver == null
-					|| objectMouseOver.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK) {
+					|| objectMouseOver.typeOfHit != RayTraceResult.Type.BLOCK) {
 				notFacingBlock(h);
 				return;
 			}

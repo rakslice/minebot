@@ -1,6 +1,7 @@
 package net.famzangl.minecraft.minebot.ai.tools.rate;
 
 import net.famzangl.minecraft.minebot.ai.path.world.BlockFloatMap;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 
 public abstract class Rater {
@@ -15,23 +16,23 @@ public abstract class Rater {
 		this.values = values;
 	}
 
-	public final float ratePowed(ItemStack item, int forBlockAndMeta) {
-		return (float) Math.pow(rate(item, forBlockAndMeta), getPow(item, forBlockAndMeta));
+	public final float ratePowed(ItemStack item, int forBlockAndMeta, IBlockState forBlockState) {
+		return (float) Math.pow(rate(item, forBlockAndMeta, forBlockState), getPow(item, forBlockAndMeta));
 	}
 
 	protected double getPow(ItemStack item, int forBlockAndMeta) {
 		return 1;
 	}
 
-	public float rate(ItemStack item, int forBlockAndMeta) {
-		if (isAppleciable(item, forBlockAndMeta)) {
+	public float rate(ItemStack item, int forBlockAndMeta, IBlockState forBlockState) {
+		if (isAppleciable(item, forBlockAndMeta, forBlockState)) {
 			return forBlockAndMeta < 0 ? values.getDefaultValue() : values.get(forBlockAndMeta);
 		} else {
 			return 1;
 		}
 	}
 
-	protected boolean isAppleciable(ItemStack item, int forBlockAndMeta) {
+	protected boolean isAppleciable(ItemStack item, int forBlockAndMeta, IBlockState forBlockState) {
 		return true;
 	}
 

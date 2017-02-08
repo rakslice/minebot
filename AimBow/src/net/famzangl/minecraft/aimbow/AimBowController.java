@@ -16,38 +16,14 @@
  *******************************************************************************/
 package net.famzangl.minecraft.aimbow;
 
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import net.famzangl.minecraft.aimbow.aiming.ColissionData;
-import net.famzangl.minecraft.aimbow.aiming.BowColissionSolver;
-import net.famzangl.minecraft.aimbow.aiming.ReverseBowSolver;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.Entity;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
-
-import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
 
 public class AimBowController {
 	protected static final KeyBinding autoAimKey = new KeyBinding("Auto aim",
@@ -79,9 +55,9 @@ public class AimBowController {
 		
 		if (autoAimKey.isPressed()) {
 			gui.autoAim = !gui.autoAim;
-
+			
 			Minecraft.getMinecraft().thePlayer
-					.addChatMessage(new ChatComponentText("Autoaim: "
+					.addChatMessage(new TextComponentString("Autoaim: "
 							+ (gui.autoAim ? "On" : "Off")));
 		}
 	}
@@ -100,11 +76,11 @@ public class AimBowController {
 	// // + (entitylivingbase.posZ - entitylivingbase.lastTickPosZ)
 	// // * partialTicks;
 	// // entitylivingbase.
-	// Vec3 player = entitylivingbase.getPosition(event.partialTicks);
-	// Vec3 looking = entitylivingbase.getLook(event.partialTicks);
+	// Vec3d player = entitylivingbase.getPosition(event.partialTicks);
+	// Vec3d looking = entitylivingbase.getLook(event.partialTicks);
 	//
-	// Vec3 pos = Vec3.createVectorHelper(x, y, z);
-	// Vec3 marking = pos.addVector(-player.xCoord, -player.yCoord,
+	// Vec3d pos = Vec3d.createVectorHelper(x, y, z);
+	// Vec3d marking = pos.addVector(-player.xCoord, -player.yCoord,
 	// -player.zCoord).normalize();
 	// System.out.println("Current d: " + marking);
 	// marking.rotateAroundY((float) (entitylivingbase.rotationYaw / 180 *
@@ -113,7 +89,7 @@ public class AimBowController {
 	// marking.rotateAroundX((float) (entitylivingbase.rotationPitch / 180 *
 	// Math.PI));
 	// System.out.println("Current d: " + marking);
-	// Vec3 screenEdge = Vec3.createVectorHelper(-0.7235458831104901,
+	// Vec3d screenEdge = Vec3d.createVectorHelper(-0.7235458831104901,
 	// 0.407043401367207, 0.5574916588955217);
 	//
 	// double fovY = 70.0F;
@@ -123,9 +99,9 @@ public class AimBowController {
 	// fovY *= Math.PI / 180.0 / 2;
 	// double fovX = fovY * mc.displayWidth / mc.displayHeight;
 	//
-	// Vec3 xz = Vec3.createVectorHelper(marking.xCoord, 0, marking.zCoord)
+	// Vec3d xz = Vec3d.createVectorHelper(marking.xCoord, 0, marking.zCoord)
 	// .normalize();
-	// Vec3 xy = Vec3.createVectorHelper(0, marking.yCoord, marking.zCoord)
+	// Vec3d xy = Vec3d.createVectorHelper(0, marking.yCoord, marking.zCoord)
 	// .normalize();
 	// double angX = Math.asin(xz.xCoord);
 	// double angY = Math.asin(xy.yCoord);

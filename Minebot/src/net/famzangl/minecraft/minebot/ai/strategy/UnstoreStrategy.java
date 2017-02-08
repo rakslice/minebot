@@ -17,6 +17,7 @@
 package net.famzangl.minecraft.minebot.ai.strategy;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import net.famzangl.minecraft.minebot.ai.AIHelper;
@@ -34,7 +35,8 @@ import net.famzangl.minecraft.minebot.ai.task.inventory.MoveInInventoryTask;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
 
 public class UnstoreStrategy extends PathFinderStrategy {
 
@@ -61,23 +63,26 @@ public class UnstoreStrategy extends PathFinderStrategy {
 			return false;
 		}
 
-		public ArrayList<AITask> getTakeTasks(ItemStack[] mainInventory,
+		public ArrayList<AITask> getTakeTasks(NonNullList<ItemStack> mainInventory,
 				ChestData c) {
 			ArrayList<AITask> tasks = new ArrayList<AITask>();
-			for (int inventorySlot = 0; inventorySlot < 36; inventorySlot++) {
+			
+			int inventorySlot = 0;
+			for (Iterator<ItemStack> it = mainInventory.iterator(); it.hasNext(); inventorySlot++) {
+				ItemStack s = it.next();
 				InventorySlot slot = wantedInventory.getSlot(inventorySlot);
 				if (slot.isEmpty() || !c.couldTakeItem(slot.getFakeMcStack())) {
 					continue;
 				}
-				if (mainInventory[inventorySlot] != null) {
-					if (!new SameItemFilter(mainInventory[inventorySlot])
+				if (s != null) {
+					if (!new SameItemFilter(s)
 							.matches(slot.getFakeMcStack())) {
 						System.out
 								.println("This slot already contains an other item.");
 						noMoreWork[inventorySlot] = true;
 						continue;
-					} else if (mainInventory[inventorySlot].stackSize >= Math
-							.min(mainInventory[inventorySlot].getMaxStackSize(),
+					} else if (s.func_190916_E() >= Math
+							.min(s.getMaxStackSize(),
 									slot.amount)) {
 						System.out
 								.println("This slot already contains enough items.");
@@ -130,7 +135,7 @@ public class UnstoreStrategy extends PathFinderStrategy {
 							Slot s = inventorySlots.get(i);
 							if (filter.matches(s.getStack())) {
 								int rating = rateSize(h,
-										s.getStack().stackSize, missing);
+										s.getStack().func_190916_E(), missing);
 								if (rating > fromStackRating) {
 									fromStackRating = rating;
 									fromStack = i;
@@ -202,7 +207,7 @@ public class UnstoreStrategy extends PathFinderStrategy {
 			ArrayList<ChestData> chests = chestBlockHandler
 					.getReachableForPos(currentPos);
 			for (final ChestData c : chests) {
-				ItemStack[] inventory = helper.getMinecraft().thePlayer.inventory.mainInventory;
+				NonNullList<ItemStack> inventory = helper.getMinecraft().thePlayer.inventory.mainInventory;
 				ArrayList<AITask> tasks = list.getTakeTasks(inventory, c);
 
 				if (!tasks.isEmpty()) {

@@ -18,7 +18,7 @@ import net.famzangl.minecraft.minebot.ai.utils.BlockArea.AreaVisitor;
 import net.famzangl.minecraft.minebot.ai.utils.BlockCuboid;
 import net.famzangl.minecraft.minebot.ai.utils.BlockFilteredArea;
 import net.famzangl.minecraft.minebot.ai.utils.ReverseAcceptingArea;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 
 import org.apache.logging.log4j.LogManager;

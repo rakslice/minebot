@@ -29,10 +29,9 @@ import net.famzangl.minecraft.minebot.ai.render.PosMarkerRenderer;
 import net.famzangl.minecraft.minebot.ai.utils.BlockArea;
 import net.famzangl.minecraft.minebot.ai.utils.BlockArea.AreaVisitor;
 import net.famzangl.minecraft.minebot.ai.utils.BlockCuboid;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.MovingObjectPosition.MovingObjectType;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 
 import org.apache.logging.log4j.Marker;
@@ -94,7 +93,7 @@ public class DestroyInRangeTask extends AITask implements CanPrefaceAndDestroy {
 	private volatile BlockPos currentAttemptingPos;
 	private final ArrayList<BlockPos> failedBlocks = new ArrayList<BlockPos>();
 	private BlockArea range;
-	private Vec3 facingPos;
+	private Vec3d facingPos;
 	private BlockPos lastFacingFor;
 
 	private final PosMarkerRenderer renderer = new PosMarkerRenderer(0, 0, 255);
@@ -208,8 +207,8 @@ public class DestroyInRangeTask extends AITask implements CanPrefaceAndDestroy {
 	}
 
 	protected BlockPos checkFacingAcceptableBlock(AIHelper h, BlockPos n, boolean isFacingRightDirection) {
-		MovingObjectPosition hit = h.getObjectMouseOver();
-		if (isFacingRightDirection && hit != null && hit.typeOfHit == MovingObjectType.BLOCK) {
+		RayTraceResult hit = h.getObjectMouseOver();
+		if (isFacingRightDirection && hit != null && hit.typeOfHit == RayTraceResult.Type.BLOCK) {
 			BlockPos pos = hit.getBlockPos();
 			if (isAcceptedFacingPos(h, n, pos)) {
 				return pos;

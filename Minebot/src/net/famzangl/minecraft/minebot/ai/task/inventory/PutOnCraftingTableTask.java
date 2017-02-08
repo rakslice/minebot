@@ -16,8 +16,11 @@
  *******************************************************************************/
 package net.famzangl.minecraft.minebot.ai.task.inventory;
 
+import java.util.Iterator;
+
 import net.famzangl.minecraft.minebot.ai.AIHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 /**
  * Put an item in a given slot of the currently open crafting table.
@@ -44,10 +47,12 @@ public class PutOnCraftingTableTask extends MoveInInventoryTask {
 
 	@Override
 	protected int getFromStack(AIHelper h) {
-		ItemStack[] mainInventory = h.getMinecraft().thePlayer.inventory.mainInventory;
+		NonNullList<ItemStack> mainInventory = h.getMinecraft().thePlayer.inventory.mainInventory;
 		int inventorySlot = -1;
-		for (int i = 0; i < mainInventory.length; i++) {
-			if (item.equals(ItemWithSubtype.fromStack(mainInventory[i]))) {
+		int i = 0;
+		for (Iterator<ItemStack> it = mainInventory.iterator(); it.hasNext(); i++) {
+			ItemStack s = it.next();
+			if (item.equals(ItemWithSubtype.fromStack(s))) {
 				inventorySlot = i;
 			}
 		}

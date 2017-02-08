@@ -44,16 +44,18 @@ import net.famzangl.minecraft.minebot.ai.strategy.StackStrategy;
 import net.famzangl.minecraft.minebot.ai.strategy.StrategyStack;
 import net.famzangl.minecraft.minebot.ai.strategy.WalkTowardsStrategy;
 import net.famzangl.minecraft.minebot.ai.tools.ToolRater;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandResultStats.Type;
+import net.minecraft.command.EntitySelector;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.PlayerSelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.Vec3;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 /**
@@ -130,7 +132,7 @@ public class MineScript {
 	 * @return An array of found entities.
 	 * @throws ScriptException
 	 */
-	public Object getEntities(String entityDescr) throws ScriptException {
+	public Object getEntities(String entityDescr) throws ScriptException, CommandException {
 		return getEntities(entityDescr, null);
 	}
 
@@ -143,9 +145,9 @@ public class MineScript {
 	 * @throws ScriptException
 	 */
 	public Object getEntities(String entityDescr, Object nbtO)
-			throws ScriptException {
+			throws ScriptException, CommandException {
 		final AIHelper helper = waitForTick();
-		List<Entity> entities = PlayerSelector.matchEntities(
+		List<Entity> entities = EntitySelector.matchEntities(
 				new ICommandSender() {
 					@Override
 					public void setCommandStat(Type type, int amount) {
@@ -158,7 +160,7 @@ public class MineScript {
 					}
 
 					@Override
-					public Vec3 getPositionVector() {
+					public Vec3d getPositionVector() {
 						throw new UnsupportedOperationException();
 					}
 
@@ -178,7 +180,7 @@ public class MineScript {
 					}
 
 					@Override
-					public IChatComponent getDisplayName() {
+					public ITextComponent getDisplayName() {
 						throw new UnsupportedOperationException();
 					}
 
@@ -194,9 +196,15 @@ public class MineScript {
 					}
 
 					@Override
-					public void addChatMessage(IChatComponent message) {
+					public void addChatMessage(ITextComponent message) {
 						// Only called for errors.
 						throw new RuntimeException(message.toString());
+					}
+
+					@Override
+					public MinecraftServer getServer() {
+						// FIXME implement
+						throw new RuntimeException("Unimplemented");
 					}
 				}, entityDescr, Entity.class);
 

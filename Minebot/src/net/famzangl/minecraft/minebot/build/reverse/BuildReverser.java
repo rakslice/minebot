@@ -28,7 +28,7 @@ import net.famzangl.minecraft.minebot.ai.path.world.Pos;
 import net.famzangl.minecraft.minebot.build.reverse.factories.BuildTaskFactories;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 
 import org.apache.logging.log4j.LogManager;
@@ -132,7 +132,7 @@ public class BuildReverser {
 		LOGGER.trace(MARKER_RECONSTRUCT, "Reconstructing block at " + pos);
 
 		final Block b = helper.getBlock(pos);
-		if (b != Blocks.air) {
+		if (b != Blocks.AIR) {
 			try {
 				final TaskDescription taskString = BuildTaskFactories.getTaskFor(helper.getWorld(), pos) ;
 				LOGGER.trace(MARKER_RECONSTRUCT, "Resulting description: " + taskString);

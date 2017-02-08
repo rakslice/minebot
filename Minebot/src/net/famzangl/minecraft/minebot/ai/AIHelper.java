@@ -46,13 +46,14 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.MovementInput;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.MovingObjectPosition.MovingObjectType;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.RayTraceResult.Type;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
@@ -218,7 +219,7 @@ public abstract class AIHelper {
 	 * 
 	 * @return
 	 */
-	public MovingObjectPosition getObjectMouseOver() {
+	public RayTraceResult getObjectMouseOver() {
 		if (objectMouseOverInvalidated) {
 			objectMouseOverInvalidated = false;
 			mc.entityRenderer.getMouseOver(1.0F);
@@ -271,11 +272,11 @@ public abstract class AIHelper {
 			return 0;
 		}
 		
-		Vec3 playerLook = mc.thePlayer.getLookVec().normalize();
-		return Math.acos(playerLook.dotProduct(new Vec3(d0, d1, d2).normalize()));
+		Vec3d playerLook = mc.thePlayer.getLookVec().normalize();
+		return Math.acos(playerLook.dotProduct(new Vec3d(d0, d1, d2).normalize()));
 	}
 	
-	public boolean isFacing(Vec3 vec) {
+	public boolean isFacing(Vec3d vec) {
 		return isFacing(vec.xCoord, vec.yCoord, vec.zCoord);
 	}
 
@@ -283,7 +284,7 @@ public abstract class AIHelper {
 		return face(x, y, z, 0, 0);
 	}
 
-	public boolean face(Vec3 vec) {
+	public boolean face(Vec3d vec) {
 		return face(vec.xCoord, vec.yCoord, vec.zCoord);
 	}
 
@@ -368,9 +369,9 @@ public abstract class AIHelper {
 	 * @return <code>true</code> if it is facing the Block.
 	 */
 	public boolean isFacingBlock(int x, int y, int z) {
-		final MovingObjectPosition o = getObjectMouseOver();
+		final RayTraceResult o = getObjectMouseOver();
 		return o != null
-				&& o.typeOfHit == MovingObjectType.BLOCK
+				&& o.typeOfHit == RayTraceResult.Type.BLOCK
 				&& new BlockPos(x, y, z).equals(o.getBlockPos())
 				&& (y < 255 || allowTopOfWorldHit() || o.sideHit != EnumFacing.UP);
 	}
@@ -424,7 +425,7 @@ public abstract class AIHelper {
 	 * @return <code>true</code> if the player faces the block.
 	 */
 	public boolean isFacingBlock(int x, int y, int z, EnumFacing side) {
-		final MovingObjectPosition o = getObjectMouseOver();
+		final RayTraceResult o = getObjectMouseOver();
 		return isFacingBlock(x, y, z) && o.sideHit == side;
 	}
 
@@ -472,7 +473,10 @@ public abstract class AIHelper {
 			final int blockMetadata = getWorld().getBlockIdWithMeta(x, y, z) & 0xf;
 			maxY = (blockMetadata & 0x8) == 0 ? 0.5 : 1;
 		} else {
-			maxY = block.getBlockBoundsMaxY();
+			//maxY = block.getBlockBoundsMaxY();
+			BlockPos pos = new BlockPos(x, y - 1, z);
+			AxisAlignedBB bb = new AxisAlignedBB(pos);
+			maxY = bb.maxY;
 		}
 
 		return y - 1 + maxY;
@@ -612,12 +616,13 @@ public abstract class AIHelper {
 		if (bestRatingSlot < 0 || bestRatingSlot >= 9) {
 			bestRatingSlot = 0;
 		}
-		int block = pos == null ? -1 : getWorld().getBlockIdWithMeta(pos);
+		WorldData world = getWorld();
+		int block = pos == null ? -1 : world.getBlockIdWithMeta(pos);
 		float bestRating = rater.rateTool(
-				mc.thePlayer.inventory.getStackInSlot(bestRatingSlot), block);
+				mc.thePlayer.inventory.getStackInSlot(bestRatingSlot), block, world.getBlockState(pos));
 		for (int i = 0; i < 9; ++i) {
 			float rating = rater.rateTool(
-					mc.thePlayer.inventory.getStackInSlot(i), block);
+					mc.thePlayer.inventory.getStackInSlot(i), block, world.getBlockState(pos));
 			if (rating > bestRating) {
 				bestRating = rating;
 				bestRatingSlot = i;
@@ -800,7 +805,7 @@ public abstract class AIHelper {
 	 * Presses the attack key in the next game tick.
 	 */
 	public void overrideAttack() {
-		if (mc.thePlayer.isUsingItem()) {
+		if (mc.thePlayer.isHandActive()) {
 			LOGGER.warn("WARNING: Player is currently using an item, but attack was requested.");
 		}
 		overrideKey(KeyType.ATTACK);

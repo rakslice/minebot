@@ -20,7 +20,7 @@ import net.famzangl.minecraft.minebot.ai.AIHelper;
 import net.famzangl.minecraft.minebot.ai.ItemFilter;
 import net.famzangl.minecraft.minebot.ai.path.world.BlockSets;
 import net.famzangl.minecraft.minebot.ai.task.AITask;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 public abstract class BuildTask {
 

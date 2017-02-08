@@ -16,12 +16,7 @@
  *******************************************************************************/
 package net.famzangl.minecraft.aimbow;
 
-import java.lang.reflect.Field;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 
 public class ZoomController {
 
@@ -34,7 +29,7 @@ public class ZoomController {
 		zoom = 1;
 	}
 
-	public void zoomTowards(Vec3 target) {
+	public void zoomTowards(Vec3d target) {
 //		EntityLivingBase entitylivingbase = Minecraft.getMinecraft().renderViewEntity;
 //		Vec3 player = entitylivingbase.getPosition(partialTicks);
 //		// Vec3 looking = entitylivingbase.getLook(partialTicks);

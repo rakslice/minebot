@@ -33,7 +33,7 @@ import net.minecraft.inventory.SlotFurnaceFuel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 public class FurnaceBlockHandler extends RangeBlockHandler<FurnaceData> {
 
@@ -94,9 +94,9 @@ public class FurnaceBlockHandler extends RangeBlockHandler<FurnaceData> {
 			setBurnItem = burn == null ? null : new ItemWithSubtype(burn);
 			setFuelItem = fuel == null ? null : new ItemWithSubtype(fuel);
 			isFullBurn = burn != null
-					&& burn.getMaxStackSize() <= burn.stackSize;
+					&& burn.getMaxStackSize() <= burn.func_190916_E();
 			isFullFuel = fuel != null
-					&& fuel.getMaxStackSize() <= fuel.stackSize;
+					&& fuel.getMaxStackSize() <= fuel.func_190916_E();
 			setResultItem = result == null ? null : new ItemWithSubtype(result);
 			resultStackKnown = true;
 		}

@@ -20,7 +20,7 @@ import net.famzangl.minecraft.minebot.ai.AIHelper;
 import net.famzangl.minecraft.minebot.ai.ClassItemFilter;
 import net.famzangl.minecraft.minebot.ai.task.TaskOperations;
 import net.minecraft.item.ItemSign;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * Place a sign on the ground.

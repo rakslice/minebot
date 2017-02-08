@@ -16,7 +16,7 @@
  *******************************************************************************/
 package net.famzangl.minecraft.aimbow.aiming;
 
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
 
 public class TickingEntity {
 	/**

@@ -1,6 +1,7 @@
 package net.famzangl.minecraft.minebot.ai.tools.rate;
 
 import net.famzangl.minecraft.minebot.ai.path.world.BlockFloatMap;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 
 public class AndRater extends Rater {
@@ -21,9 +22,9 @@ public class AndRater extends Rater {
 	}
 
 	@Override
-	protected boolean isAppleciable(ItemStack item, int forBlockAndMeta) {
+	protected boolean isAppleciable(ItemStack item, int forBlockAndMeta, IBlockState forBlockState) {
 		for (Rater rater : raters) {
-			if (!rater.isAppleciable(item, forBlockAndMeta)) {
+			if (!rater.isAppleciable(item, forBlockAndMeta, forBlockState)) {
 				return false;
 			}
 		}

@@ -70,7 +70,7 @@ import net.famzangl.minecraft.minebot.build.commands.CommandStepNext;
 import net.famzangl.minecraft.minebot.build.commands.CommandStepPlace;
 import net.famzangl.minecraft.minebot.build.commands.CommandStepWalk;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.text.TextComponentString;
 
 import com.google.common.base.Function;
 
@@ -161,7 +161,7 @@ public class AIChatController {
 
 	private static void addToChat(String string) {
 		Minecraft.getMinecraft().thePlayer
-				.addChatMessage(new ChatComponentText(string));
+				.addChatMessage(new TextComponentString(string));
 	}
 
 	public static <T> void addToChatPaged(String title, int page, List<T> data,

@@ -25,14 +25,14 @@ import net.famzangl.minecraft.minebot.ai.task.PlaceTorchSomewhereTask;
 import net.famzangl.minecraft.minebot.ai.task.SkipWhenSearchingPrefetch;
 import net.famzangl.minecraft.minebot.ai.task.TaskOperations;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 
 @SkipWhenSearchingPrefetch
 public class PlaceTorchIfLightBelowTask extends PlaceTorchSomewhereTask {
 
 	private static final BlockItemFilter TORCH_FILTER = new BlockItemFilter(
-			Blocks.torch);
+			Blocks.TORCH);
 	private final BlockPos currentPos;
 	private final float torchLightLevel;
 	private boolean attempted;

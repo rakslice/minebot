@@ -21,9 +21,9 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 
 public class ThrowableColissionSolver extends ColissionSolver{
 
@@ -32,20 +32,20 @@ public class ThrowableColissionSolver extends ColissionSolver{
 	}
 
 	@Override
-	protected MovingObjectPosition computeHit(RayData s, int tick) {
-        Vec3 vec3 = new Vec3(s.posX, s.posY, s.posZ);
-        Vec3 vec31 = new Vec3(s.posX + s.motionX, s.posY + s.motionY, s.posZ + s.motionZ);
-        MovingObjectPosition movingobjectposition = minecraft.theWorld.rayTraceBlocks(vec3, vec31);
-        vec3 = new Vec3(s.posX, s.posY, s.posZ);
-        vec31 = new Vec3(s.posX + s.motionX, s.posY + s.motionY, s.posZ + s.motionZ);
+	protected RayTraceResult computeHit(RayData s, int tick) {
+        Vec3d Vec3d = new Vec3d(s.posX, s.posY, s.posZ);
+        Vec3d Vec3d1 = new Vec3d(s.posX + s.motionX, s.posY + s.motionY, s.posZ + s.motionZ);
+        RayTraceResult RayTraceResult = minecraft.theWorld.rayTraceBlocks(Vec3d, Vec3d1);
+        Vec3d = new Vec3d(s.posX, s.posY, s.posZ);
+        Vec3d1 = new Vec3d(s.posX + s.motionX, s.posY + s.motionY, s.posZ + s.motionZ);
 
-        if (movingobjectposition != null)
+        if (RayTraceResult != null)
         {
-            vec31 = new Vec3(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
+            Vec3d1 = new Vec3d(RayTraceResult.hitVec.xCoord, RayTraceResult.hitVec.yCoord, RayTraceResult.hitVec.zCoord);
         }
 
         Entity entity = null;
-        List list = minecraft.theWorld.getEntitiesWithinAABB(Entity.class, s.boundingBox.addCoord(s.motionX, s.motionY, s.motionZ).expand(1.0D, 1.0D, 1.0D));
+        List<Entity> list = minecraft.theWorld.getEntitiesWithinAABB(Entity.class, s.boundingBox.addCoord(s.motionX, s.motionY, s.motionZ).expand(1.0D, 1.0D, 1.0D));
         double d0 = 0.0D;
         EntityLivingBase entitylivingbase = this.shootingEntity;
 
@@ -57,11 +57,11 @@ public class ThrowableColissionSolver extends ColissionSolver{
             {
                 float f = 0.3F;
                 AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().expand((double)f, (double)f, (double)f);
-                MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec3, vec31);
+                RayTraceResult RayTraceResult1 = axisalignedbb.calculateIntercept(Vec3d, Vec3d1);
 
-                if (movingobjectposition1 != null)
+                if (RayTraceResult1 != null)
                 {
-                    double d1 = vec3.distanceTo(movingobjectposition1.hitVec);
+                    double d1 = Vec3d.distanceTo(RayTraceResult1.hitVec);
 
                     if (d1 < d0 || d0 == 0.0D)
                     {
@@ -74,9 +74,9 @@ public class ThrowableColissionSolver extends ColissionSolver{
 
         if (entity != null)
         {
-            return new MovingObjectPosition(entity);
+            return new RayTraceResult(entity);
         } else {
-        	return movingobjectposition;
+        	return RayTraceResult;
         }
 	}
 	

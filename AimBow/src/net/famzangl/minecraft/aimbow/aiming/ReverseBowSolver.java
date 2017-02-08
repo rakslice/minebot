@@ -19,8 +19,8 @@ package net.famzangl.minecraft.aimbow.aiming;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
 
 /**
  * Gets a yaw/pitch for a given entity.
@@ -44,7 +44,7 @@ public class ReverseBowSolver {
 		this.velocity = velocity;
 	}
 	
-	public Vec3 getLookForTarget(Entity target) {
+	public Vec3d getLookForTarget(Entity target) {
 		EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
 		AxisAlignedBB boundingBox = target.getEntityBoundingBox();
 		double targetX = (boundingBox.maxX + boundingBox.minX) / 2;
@@ -60,7 +60,7 @@ public class ReverseBowSolver {
 		float xz = (float) Math.sqrt(1 - y * y);
 		double x = dx / dHor * xz;
 		double z = dz / dHor * xz;
-		return new Vec3(x, y, z);
+		return new Vec3d(x, y, z);
 	}
 	
 	private float getYForTarget(float dHor, float dVert) {

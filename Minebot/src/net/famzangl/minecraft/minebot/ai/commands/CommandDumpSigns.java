@@ -21,12 +21,12 @@ import net.minecraft.block.BlockSign;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 
 @AICommand(helpText = "Dump all signs to a text file.", name = "minebot")
 public class CommandDumpSigns {
-	private static final BlockSet SIGNS = new BlockSet(Blocks.standing_sign, Blocks.wall_sign);
+	private static final BlockSet SIGNS = new BlockSet(Blocks.STANDING_SIGN, Blocks.WALL_SIGN);
 	@AICommandInvocation()
 	public static AIStrategy run(
 			AIHelper helper,
@@ -74,8 +74,8 @@ public class CommandDumpSigns {
 					out.print(p.getY());
 					out.print("\t");
 					out.print(p.getZ());
-					IChatComponent[] texts = ((TileEntitySign) tileentity).signText;
-					for (IChatComponent t : texts) {
+					ITextComponent[] texts = ((TileEntitySign) tileentity).signText;
+					for (ITextComponent t : texts) {
 						out.append("\t");
 						out.print(t == null ? "" : t.getUnformattedText());
 					}

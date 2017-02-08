@@ -16,9 +16,7 @@
  *******************************************************************************/
 package net.famzangl.minecraft.aimbow.aiming;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.MathHelper;
 
 public class ThrowableRayData extends RayData {
 

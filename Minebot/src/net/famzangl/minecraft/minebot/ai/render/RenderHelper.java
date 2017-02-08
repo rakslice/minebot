@@ -19,11 +19,11 @@ package net.famzangl.minecraft.minebot.ai.render;
 import net.famzangl.minecraft.minebot.ai.AIHelper;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 
 import org.lwjgl.opengl.GL11;
@@ -56,9 +56,9 @@ public class RenderHelper {
 
 		preRender();
         Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-        worldrenderer.setTranslation(-x, -y, -z);
-        worldrenderer.begin(GL11.GL_QUADS, VF);
+        VertexBuffer buffer = tessellator.getBuffer();
+        buffer.setTranslation(-x, -y, -z);
+        buffer.begin(GL11.GL_QUADS, VF);
        // worldrenderer.markDirty();
 	}
 
@@ -89,48 +89,48 @@ public class RenderHelper {
     }
 	protected void renderEnd() {
 		final Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        VertexBuffer buffer = tessellator.getBuffer();
 		tessellator.draw();
-		worldrenderer.setTranslation(0.0D, 0.0D, 0.0D);
+		buffer.setTranslation(0.0D, 0.0D, 0.0D);
 		postRender();
 	}
 
 	protected void renderMarker(BlockPos m, float r, float g, float b, float a) {
 		final Tessellator tessellator = Tessellator.getInstance();
-		WorldRenderer renderer = tessellator.getWorldRenderer();
-		renderer.color(r, g, b, a);
-		renderMarkerP(renderer, m.getX(), m.getY(), m.getZ());
+		VertexBuffer buffer = tessellator.getBuffer();
+		buffer.color(r, g, b, a);
+		renderMarkerP(buffer, m.getX(), m.getY(), m.getZ());
 	}
 
-	private void renderMarkerP(WorldRenderer worldRenderer, int x, int y, int z) {
-		worldRenderer.pos(x + MIN, y + MAX, z + MIN);
-		worldRenderer.pos(x + MIN, y + MAX, z + MAX);
-		worldRenderer.pos(x + MAX, y + MAX, z + MAX);
-		worldRenderer.pos(x + MAX, y + MAX, z + MIN);
+	private void renderMarkerP(VertexBuffer buffer, int x, int y, int z) {
+		buffer.pos(x + MIN, y + MAX, z + MIN);
+		buffer.pos(x + MIN, y + MAX, z + MAX);
+		buffer.pos(x + MAX, y + MAX, z + MAX);
+		buffer.pos(x + MAX, y + MAX, z + MIN);
 
-		worldRenderer.pos(x + MIN, y + MIN, z + MIN);
-		worldRenderer.pos(x + MIN, y + MIN, z + MAX);
-		worldRenderer.pos(x + MIN, y + MAX, z + MAX);
-		worldRenderer.pos(x + MIN, y + MAX, z + MIN);
+		buffer.pos(x + MIN, y + MIN, z + MIN);
+		buffer.pos(x + MIN, y + MIN, z + MAX);
+		buffer.pos(x + MIN, y + MAX, z + MAX);
+		buffer.pos(x + MIN, y + MAX, z + MIN);
 
-		worldRenderer.pos(x + MAX, y + MAX, z + MIN);
-		worldRenderer.pos(x + MAX, y + MAX, z + MAX);
-		worldRenderer.pos(x + MAX, y + MIN, z + MAX);
-		worldRenderer.pos(x + MAX, y + MIN, z + MIN);
+		buffer.pos(x + MAX, y + MAX, z + MIN);
+		buffer.pos(x + MAX, y + MAX, z + MAX);
+		buffer.pos(x + MAX, y + MIN, z + MAX);
+		buffer.pos(x + MAX, y + MIN, z + MIN);
 
-		worldRenderer.pos(x + MIN, y + MIN, z + MIN);
-		worldRenderer.pos(x + MIN, y + MAX, z + MIN);
-		worldRenderer.pos(x + MAX, y + MAX, z + MIN);
-		worldRenderer.pos(x + MAX, y + MIN, z + MIN);
+		buffer.pos(x + MIN, y + MIN, z + MIN);
+		buffer.pos(x + MIN, y + MAX, z + MIN);
+		buffer.pos(x + MAX, y + MAX, z + MIN);
+		buffer.pos(x + MAX, y + MIN, z + MIN);
 
-		worldRenderer.pos(x + MIN, y + MAX, z + MAX);
-		worldRenderer.pos(x + MIN, y + MIN, z + MAX);
-		worldRenderer.pos(x + MAX, y + MIN, z + MAX);
-		worldRenderer.pos(x + MAX, y + MAX, z + MAX);
+		buffer.pos(x + MIN, y + MAX, z + MAX);
+		buffer.pos(x + MIN, y + MIN, z + MAX);
+		buffer.pos(x + MAX, y + MIN, z + MAX);
+		buffer.pos(x + MAX, y + MAX, z + MAX);
 
-		worldRenderer.pos(x + MIN, y + MIN, z + MAX);
-		worldRenderer.pos(x + MIN, y + MIN, z + MIN);
-		worldRenderer.pos(x + MAX, y + MIN, z + MIN);
-		worldRenderer.pos(x + MAX, y + MIN, z + MAX);
+		buffer.pos(x + MIN, y + MIN, z + MAX);
+		buffer.pos(x + MIN, y + MIN, z + MIN);
+		buffer.pos(x + MAX, y + MIN, z + MIN);
+		buffer.pos(x + MAX, y + MIN, z + MAX);
 	}
 }

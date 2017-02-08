@@ -5,8 +5,8 @@ import java.util.Hashtable;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -156,8 +156,8 @@ public class WorldWithDelta extends WorldData {
 	}
 
 	@Override
-	public Vec3 getExactPlayerPosition() {
-		return new Vec3(playerPosition.getX() + .5, playerPosition.getY(),
+	public Vec3d getExactPlayerPosition() {
+		return new Vec3d(playerPosition.getX() + .5, playerPosition.getY(),
 				playerPosition.getZ() + .5);
 	}
 

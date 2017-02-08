@@ -28,7 +28,7 @@ import net.famzangl.minecraft.minebot.build.blockbuild.BuildTask;
 import net.famzangl.minecraft.minebot.settings.MinebotSettingsRoot;
 import net.famzangl.minecraft.minebot.settings.PathfindingSetting;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * This path finder finds the way to th next build task.
@@ -40,7 +40,7 @@ public class ForBuildPathFinder extends MovePathFinder {
 
 	private static final int NEIGHBOURS_PER_DIRECTION = 6;
 	private static final BlockSet FENCES = new BlockSet(
-			Blocks.cobblestone_wall).unionWith(BlockSets.FENCE);
+			Blocks.COBBLESTONE_WALL).unionWith(BlockSets.FENCE);
 	/**
 	 * Task we want to prepare for.
 	 */
@@ -64,10 +64,10 @@ public class ForBuildPathFinder extends MovePathFinder {
 	protected PathfindingSetting loadSettings(MinebotSettingsRoot settingsRoot) {
 		return settingsRoot.getPathfinding().getConstructionPathfinder();
 	}
-
+	
 	@Override
 	protected boolean runSearch(BlockPos playerPosition) {
-		canBuildUp = helper.canSelectItem(new BlockItemFilter(Blocks.carpet));
+		canBuildUp = helper.canSelectItem(new BlockItemFilter(Blocks.CARPET));
 		return super.runSearch(playerPosition);
 	}
 

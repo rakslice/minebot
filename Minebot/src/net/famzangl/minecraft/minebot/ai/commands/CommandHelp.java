@@ -32,7 +32,7 @@ import net.famzangl.minecraft.minebot.ai.command.FixedNameBuilder.FixedArgumentD
 import net.famzangl.minecraft.minebot.ai.command.ParameterType;
 import net.famzangl.minecraft.minebot.ai.strategy.AIStrategy;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.text.TextComponentString;
 
 import com.google.common.base.Function;
 
@@ -112,7 +112,7 @@ final public class CommandHelp {
 			final ArrayList<ArgumentDefinition> args = command.getArguments();
 			if (args.get(0).couldEvaluateAgainst(commandName)) {
 				if (found) {
-					player.addChatMessage(new ChatComponentText(""));
+					player.addChatMessage(new TextComponentString(""));
 				}
 				printHelp(player, command);
 			}
@@ -129,20 +129,20 @@ final public class CommandHelp {
 			CommandDefinition command) {
 		final CommandToTextConverter conv = new CommandToTextConverter();
 
-		final ChatComponentText headline = new ChatComponentText(
+		final TextComponentString headline = new TextComponentString(
 				conv.apply(command));
-		headline.getChatStyle().setBold(true);
+		headline.getStyle().setBold(true);
 		player.addChatMessage(headline);
 		for (final String line : command.getHelpText().split("\n")) {
-			final ChatComponentText text = new ChatComponentText(line);
-			text.getChatStyle().setItalic(true);
+			final TextComponentString text = new TextComponentString(line);
+			text.getStyle().setItalic(true);
 			player.addChatMessage(text);
 		}
 
 		for (final ArgumentDefinition arg : command.getArguments()) {
 			final String[] help = arg.getDescriptionString().split("\n");
 			for (final String text : help) {
-				player.addChatMessage(new ChatComponentText("   " + text));
+				player.addChatMessage(new TextComponentString("   " + text));
 			}
 		}
 	}

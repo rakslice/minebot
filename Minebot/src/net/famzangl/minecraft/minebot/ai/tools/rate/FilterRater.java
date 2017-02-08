@@ -2,6 +2,7 @@ package net.famzangl.minecraft.minebot.ai.tools.rate;
 
 import net.famzangl.minecraft.minebot.ai.ItemFilter;
 import net.famzangl.minecraft.minebot.ai.path.world.BlockFloatMap;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 
 public class FilterRater extends Rater {
@@ -13,7 +14,7 @@ public class FilterRater extends Rater {
 	}
 
 	@Override
-	protected boolean isAppleciable(ItemStack item, int forBlockAndMeta) {
+	protected boolean isAppleciable(ItemStack item, int forBlockAndMeta, IBlockState forBlockState) {
 		return filter.matches(item);
 	}
 }

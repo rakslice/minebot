@@ -21,8 +21,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.util.MovementInput;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.MovingObjectPosition.MovingObjectType;
+import net.minecraft.util.math.RayTraceResult;
 
 import com.google.common.base.Predicate;
 
@@ -78,9 +77,9 @@ public class FaceAndInteractTask extends AITask {
 
 	@Override
 	public void runTick(AIHelper h, TaskOperations o) {
-		final MovingObjectPosition over = h.getObjectMouseOver();
+		final RayTraceResult over = h.getObjectMouseOver();
 		if (ticksRun > 2 && over != null
-				&& over.typeOfHit == MovingObjectType.ENTITY
+				&& over.typeOfHit == RayTraceResult.Type.ENTITY
 				&& alsoAcceptedAnimal.apply(over.entityHit)) {
 			doInteractWithCurrent(h);
 		} else {

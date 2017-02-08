@@ -6,11 +6,12 @@ import net.famzangl.minecraft.minebot.ai.command.BlockWithData;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.WorldType;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -94,12 +95,7 @@ public class BlockBoundsCache {
 			}
 
 			@Override
-			public BiomeGenBase getBiomeGenForCoords(BlockPos pos) {
-				throw new UnsupportedOperationException();
-			}
-
-			@Override
-			public boolean extendedLevelsInChunkCache() {
+			public Biome getBiome(BlockPos pos) {
 				throw new UnsupportedOperationException();
 			}
 
@@ -109,8 +105,8 @@ public class BlockBoundsCache {
 				throw new UnsupportedOperationException();
 			}
 		};
-		block.setBlockBoundsBasedOnState(world, Pos.ZERO);
-
-		return new BlockBounds(block);
+		//block.setBlockBoundsBasedOnState(world, Pos.ZERO);
+		AxisAlignedBB bb = block.getBoundingBox(world.getBlockState(Pos.ZERO), world, Pos.ZERO);
+		return new BlockBounds(bb);
 	}
 }

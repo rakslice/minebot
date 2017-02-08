@@ -22,6 +22,7 @@ import net.famzangl.minecraft.minebot.ai.task.TaskOperations;
 import net.famzangl.minecraft.minebot.ai.task.error.StringTaskError;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.item.ItemStack;
 
 import org.apache.logging.log4j.Marker;
@@ -68,7 +69,7 @@ public class TakeResultItem extends AITask {
 				&& shouldTakeStack(screen.inventorySlots.getSlot(slot)
 						.getStack())) {
 			h.getMinecraft().playerController.windowClick(
-					screen.inventorySlots.windowId, slot, 0, 1,
+					screen.inventorySlots.windowId, slot, 0, ClickType.QUICK_MOVE,
 					h.getMinecraft().thePlayer);
 			LOGGER.trace(MARKER_TAKE_RESULT, "Taking item");
 			tookItem = true;

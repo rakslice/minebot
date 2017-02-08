@@ -25,7 +25,7 @@ import net.famzangl.minecraft.minebot.ai.task.TaskOperations;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
 
 import com.google.common.base.Predicate;
 

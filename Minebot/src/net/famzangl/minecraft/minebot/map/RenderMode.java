@@ -9,29 +9,29 @@ import net.famzangl.minecraft.minebot.ai.utils.BlockCuboid;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.Chunk;
 
 public enum RenderMode {
 	UNDERGROUND(new UndergroundRenderer(), "-underground"), MAP(
 			new MapRenderer(), ""), BIOME(new BiomeRenderer(), "-biome");
 	private static final BlockSet GLOBAL_COVER_BLACKLIST = new BlockSet(
-			Blocks.wooden_slab, Blocks.stone_slab, Blocks.stone_slab2,
-			Blocks.air);
+			Blocks.WOODEN_SLAB, Blocks.STONE_SLAB, Blocks.STONE_SLAB2,
+			Blocks.AIR);
 	private static final BlockSet IGNORED_COVER_BLOCKS = new BlockSet(
-			Blocks.air, Blocks.leaves, Blocks.leaves2, Blocks.log,
-			Blocks.log2, Blocks.torch, Blocks.water, Blocks.flowing_water,
-			Blocks.waterlily, Blocks.lava, Blocks.flowing_lava,
-			Blocks.snow, Blocks.snow_layer, Blocks.ice)
+			Blocks.AIR, Blocks.LEAVES, Blocks.LEAVES2, Blocks.LOG,
+			Blocks.LOG2, Blocks.TORCH, Blocks.WATER, Blocks.FLOWING_WATER,
+			Blocks.WATERLILY, Blocks.LAVA, Blocks.FLOWING_LAVA,
+			Blocks.SNOW, Blocks.SNOW_LAYER, Blocks.ICE)
 			.unionWith(GLOBAL_COVER_BLACKLIST);
 	private static final BlockSet UNDERGROUND_BLOCKS = new BlockSet(
-			Blocks.air, Blocks.torch);
+			Blocks.AIR, Blocks.TORCH);
 	private static final BlockSet STRUCTURE_BLOCKS = new BlockSet(
-			Blocks.oak_fence, Blocks.end_portal_frame, Blocks.end_stone,
-			Blocks.bookshelf, Blocks.prismarine, Blocks.planks,
-			Blocks.nether_brick, Blocks.nether_wart, Blocks.torch);
+			Blocks.OAK_FENCE, Blocks.END_PORTAL_FRAME, Blocks.END_STONE,
+			Blocks.BOOKSHELF, Blocks.PRISMARINE, Blocks.PLANKS,
+			Blocks.NETHER_BRICK, Blocks.NETHER_WART, Blocks.TORCH);
 	private static final BlockSet INTERESTING_BLOCKS = new BlockSet(
-			Blocks.chest, Blocks.mob_spawner, Blocks.gold_block);
+			Blocks.CHEST, Blocks.MOB_SPAWNER, Blocks.GOLD_BLOCK);
 
 	private interface IRenderer {
 		/**
@@ -55,8 +55,9 @@ public enum RenderMode {
 		@Override
 		public int getColor(WorldData world, Chunk chunk, int dx, int dz) {
 			int h = chunk.getHeightValue(dx & 0xf, dz & 0xf) + 1;
+			IBlockState blockState = chunk.getBlockState(dx, h, dz);
 			while (h > 3
-					&& IGNORED_COVER_BLOCKS.contains(chunk.getBlock(dx, h, dz))) {
+					&& IGNORED_COVER_BLOCKS.contains(blockState.getBlock())) {
 				h--;
 			}
 			BlockCuboid area = new BlockCuboid(new BlockPos(dx, 0, dz),
@@ -83,10 +84,10 @@ public enum RenderMode {
 				--h;
 				state = chunk.getBlockState(new BlockPos(dx, h, dz));
 			} while ((GLOBAL_COVER_BLACKLIST.contains(state.getBlock()) || state
-					.getBlock().getMapColor(state) == MapColor.airColor)
+					.getBlock().getMapColor(state) == MapColor.AIR)
 					&& h > 0);
 
-			if (state.getBlock() == Blocks.sandstone || state.getBlock() == Blocks.sandstone_stairs) {
+			if (state.getBlock() == Blocks.SANDSTONE || state.getBlock() == Blocks.SANDSTONE_STAIRS) {
 				return 0xffb4ad8a;
 			}
 			

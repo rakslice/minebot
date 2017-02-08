@@ -17,6 +17,7 @@
 package net.famzangl.minecraft.minebot.ai.strategy;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import net.famzangl.minecraft.minebot.ai.AIHelper;
 import net.famzangl.minecraft.minebot.ai.enchanting.CloseScreenTask;
@@ -29,7 +30,8 @@ import net.famzangl.minecraft.minebot.ai.task.WaitTask;
 import net.famzangl.minecraft.minebot.ai.task.inventory.PutInChestTask;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * Store whatever you are holding in a chest.
@@ -89,9 +91,10 @@ public class StoreStrategy extends PathFinderStrategy {
 					.getReachableForPos(currentPos);
 			for (final ChestData c : chests) {
 				boolean chestOpen = false;
-				ItemStack[] inventory = helper.getMinecraft().thePlayer.inventory.mainInventory;
-				for (int i = 0; i < inventory.length; i++) {
-					final ItemStack s = inventory[i];
+				NonNullList<ItemStack> inventory = helper.getMinecraft().thePlayer.inventory.mainInventory;
+				int i = 0;
+				for (Iterator<ItemStack> it = inventory.iterator(); it.hasNext(); i++) {
+					final ItemStack s = it.next();
 					if (c.couldPutItem(s)) {
 						if (!chestOpen) {
 							addTask(new OpenChestTask(c.getSecondaryPos(),

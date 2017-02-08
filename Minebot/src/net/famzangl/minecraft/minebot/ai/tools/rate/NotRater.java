@@ -1,6 +1,7 @@
 package net.famzangl.minecraft.minebot.ai.tools.rate;
 
 import net.famzangl.minecraft.minebot.ai.path.world.BlockFloatMap;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 
 public class NotRater extends Rater {
@@ -17,7 +18,7 @@ public class NotRater extends Rater {
 
 
 	@Override
-	protected boolean isAppleciable(ItemStack item, int forBlockAndMeta) {
-		return !rater.isAppleciable(item, forBlockAndMeta);
+	protected boolean isAppleciable(ItemStack item, int forBlockAndMeta, IBlockState forBlockState) {
+		return !rater.isAppleciable(item, forBlockAndMeta, forBlockState);
 	}
 }

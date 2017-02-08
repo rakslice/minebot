@@ -21,8 +21,8 @@ import java.util.Random;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 
 public abstract class RayData extends TickingEntity {
 	protected boolean dead;
@@ -44,7 +44,7 @@ public abstract class RayData extends TickingEntity {
 	 * @param lookVec
 	 * @see EntityArrow#setThrowableHeading(double, double, double, float, float)
 	 */
-	public void shootFromTowards(Entity shootingEntity, Vec3 lookVec) {
+	public void shootFromTowards(Entity shootingEntity, Vec3d lookVec) {
 		final float yaw = (float) (Math.atan2(lookVec.zCoord, lookVec.xCoord) * 180.0D / Math.PI) - 90.0F;
 		final float pitch = (float) -(Math.atan2(lookVec.yCoord,
 				Math.sqrt(lookVec.xCoord * lookVec.xCoord + lookVec.zCoord * lookVec.zCoord)) * 180.0D / Math.PI);

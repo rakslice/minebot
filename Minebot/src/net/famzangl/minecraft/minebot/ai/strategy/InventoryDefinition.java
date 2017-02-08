@@ -18,6 +18,7 @@ package net.famzangl.minecraft.minebot.ai.strategy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 
 import net.famzangl.minecraft.minebot.ai.task.inventory.ItemWithSubtype;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -75,14 +76,16 @@ public class InventoryDefinition {
 	}
 
 	public InventoryDefinition(InventoryPlayer player) {
-		for (int i = 0; i < 36; i++) {
-			ItemStack stack = player.mainInventory[i];
+		int i = 0;
+		for(Iterator<ItemStack> it = player.mainInventory.iterator(); it.hasNext(); i++) {
+			//for (int i = 0; i < 36; i++) {
+			ItemStack stack = it.next();
 			if (stack == null || stack.getItem() == null) {
 				continue;
 			}
 
 			stack.getItem();
-			slots.add(new InventorySlot(i, stack.stackSize, Item
+			slots.add(new InventorySlot(i, stack.func_190916_E(), Item
 					.getIdFromItem(stack.getItem()),
 					stack.getHasSubtypes() ? stack.getItemDamage() : -1));
 		}

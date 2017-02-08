@@ -1,8 +1,12 @@
 package net.famzangl.minecraft.minebot.ai.path.world;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.PlayerControllerMP;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 public class RecordingWorld extends WorldWithDelta {
 
@@ -32,7 +36,9 @@ public class RecordingWorld extends WorldWithDelta {
 	private int getTimeToDestroy(BlockPos blockPos, int blockWithMeta) {
 		Block block = Block.getBlockById(blockWithMeta >> 4);
 		//how much damage to give the block per tick. The block is destroyed on damage >= 1;
-		float hardness = block.getPlayerRelativeBlockHardness(blockBreaker, getBackingWorld(), blockPos);
+		WorldClient world = getBackingWorld();
+		IBlockState state = world.getBlockState(blockPos);
+		float hardness = block.getPlayerRelativeBlockHardness(state, blockBreaker, world, blockPos);
 		System.out.println("TIME to destroy block at " + blockPos + ": " + 1 / hardness);
 		return (int) Math.round(1 / hardness) + TIME_TO_FACE;
 	}
