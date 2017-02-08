@@ -45,7 +45,8 @@ public class WorldData {
 					final int ly = y & 15;
 					final int lz = z & 15;
 					BlockStateContainer container = extendedblockstorage.getData();
-					blockId = Block.getIdFromBlock(container.get(lx, ly, lz).getBlock()) & 0xffff;
+					Block block = container.get(lx, ly, lz).getBlock();
+					blockId = (Block.getIdFromBlock(block) << 4) & 0xffff;
 				}
 			}
 
