@@ -90,6 +90,8 @@ public class CommandSettings {
 				try {
 					Desktop.getDesktop().edit(settingsFile);
 					return true;
+				} catch (IllegalArgumentException e) {
+					return false;
 				} catch (UnsupportedOperationException e) {
 					return false;
 				}
