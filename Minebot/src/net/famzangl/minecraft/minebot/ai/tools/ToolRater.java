@@ -279,22 +279,24 @@ public class ToolRater {
 	//static HashMap<IBlockState, HashMap<>>
 	
 	public float rateTool(ItemStack stack, int forBlockAndMeta, IBlockState forBlockState) {
+		Block blockKind = forBlockState.getBlock();
+		Item stackItem = stack.getItem();
+
 		float f = 1;
 		for (Rater rater : raters) {
 			f *= rater.rate(stack, forBlockAndMeta, forBlockState);
 		}
 		
-		Item stackItem = stack.getItem();
 		if (stackItem instanceof ItemPickaxe) {
 			ItemTool itemTool = (ItemPickaxe) stackItem;
 			ToolMaterial toolMaterial = itemTool.getToolMaterial();
 			
 			float mr = 1.0f;
 			
-			BlockSet minableWithStone = new BlockSet(Blocks.STONE, Blocks.IRON_ORE, Blocks.COAL_ORE);
+			BlockSet minableWithStone = new BlockSet(Blocks.STONE, Blocks.IRON_ORE, Blocks.COAL_ORE, Blocks.COBBLESTONE, Blocks.DIRT);
+			BlockSet notMinableWithStone = new BlockSet(Blocks.GOLD_ORE, Blocks.DIAMOND_ORE, Blocks.EMERALD_ORE, Blocks.REDSTONE_ORE);
 			
 			// let's add some hacks to discourage overly expensive tool use
-			Block blockKind = forBlockState.getBlock();
 			if (minableWithStone.contains(blockKind)) {
 				switch (toolMaterial) {
 				case IRON:
@@ -308,6 +310,17 @@ public class ToolRater {
 					break;
 				default:
 					mr = 1.0f;
+					break;
+				}
+			}
+			
+			// and some more hacks to discourage using tools that will break the block
+			if (notMinableWithStone.contains(blockKind)) {
+				switch (toolMaterial) {
+				case STONE:
+					mr *= 0.5f;
+					break;
+				default:
 					break;
 				}
 			}
