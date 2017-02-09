@@ -618,17 +618,18 @@ public abstract class AIHelper {
 		}
 		WorldData world = getWorld();
 		int block = pos == null ? -1 : world.getBlockIdWithMeta(pos);
+		IBlockState blockState = world.getBlockState(pos);
 		float bestRating = rater.rateTool(
-				mc.thePlayer.inventory.getStackInSlot(bestRatingSlot), block, world.getBlockState(pos));
+				mc.thePlayer.inventory.getStackInSlot(bestRatingSlot), block, blockState);
 		for (int i = 0; i < 9; ++i) {
 			float rating = rater.rateTool(
-					mc.thePlayer.inventory.getStackInSlot(i), block, world.getBlockState(pos));
+					mc.thePlayer.inventory.getStackInSlot(i), block, blockState);
 			if (rating > bestRating) {
 				bestRating = rating;
 				bestRatingSlot = i;
 			}
 		}
-
+		LOGGER.info("ToolRaterResult block " + blockState.toString() + " bestRatingSlot " + Integer.toString(bestRatingSlot) + " bestRating " + Float.toString(bestRating));
 		return new ToolRaterResult(bestRatingSlot, bestRating);
 	}
 
