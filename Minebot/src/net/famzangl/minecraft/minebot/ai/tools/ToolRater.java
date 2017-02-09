@@ -6,6 +6,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -13,6 +14,7 @@ import java.util.regex.Pattern;
 
 import net.famzangl.minecraft.minebot.ai.ItemFilter;
 import net.famzangl.minecraft.minebot.ai.path.world.BlockFloatMap;
+import net.famzangl.minecraft.minebot.ai.path.world.BlockSet;
 import net.famzangl.minecraft.minebot.ai.tools.rate.AndRater;
 import net.famzangl.minecraft.minebot.ai.tools.rate.EnchantmentRater;
 import net.famzangl.minecraft.minebot.ai.tools.rate.FilterRater;
@@ -22,6 +24,8 @@ import net.famzangl.minecraft.minebot.ai.tools.rate.NotRater;
 import net.famzangl.minecraft.minebot.ai.tools.rate.OrRater;
 import net.famzangl.minecraft.minebot.ai.tools.rate.Rater;
 import net.famzangl.minecraft.minebot.settings.MinebotSettings;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockStone;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
@@ -29,6 +33,7 @@ import net.minecraft.enchantment.EnchantmentDurability;
 import net.minecraft.enchantment.EnchantmentLootBonus;
 import net.minecraft.enchantment.EnchantmentUntouching;
 import net.minecraft.enchantment.EnumEnchantmentType;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemAxe;
@@ -270,12 +275,46 @@ public class ToolRater {
 	public List<Rater> getRaters() {
 		return Collections.unmodifiableList(raters);
 	}
-
+	
+	//static HashMap<IBlockState, HashMap<>>
+	
 	public float rateTool(ItemStack stack, int forBlockAndMeta, IBlockState forBlockState) {
 		float f = 1;
 		for (Rater rater : raters) {
 			f *= rater.rate(stack, forBlockAndMeta, forBlockState);
 		}
+		
+		Item stackItem = stack.getItem();
+		if (stackItem instanceof ItemPickaxe) {
+			ItemTool itemTool = (ItemPickaxe) stackItem;
+			ToolMaterial toolMaterial = itemTool.getToolMaterial();
+			
+			float mr = 1.0f;
+			
+			BlockSet minableWithStone = new BlockSet(Blocks.STONE, Blocks.IRON_ORE, Blocks.COAL_ORE);
+			
+			// let's add some hacks to discourage overly expensive tool use
+			Block blockKind = forBlockState.getBlock();
+			if (minableWithStone.contains(blockKind)) {
+				switch (toolMaterial) {
+				case IRON:
+					mr = 0.8f;
+					break;
+				case GOLD:
+					mr = 0.6f;
+					break;
+				case DIAMOND:
+					mr = 0.4f;
+					break;
+				default:
+					mr = 1.0f;
+					break;
+				}
+			}
+			
+			f *= mr;
+		}
+		
 		return f;
 	}
 
