@@ -15,7 +15,7 @@ build_script:
 #after_build:
 
 artifacts:
-  - path: Minebot\build\libs\minebot-rakslice-1.11-13.19.1.2189.jar
+  - path: Minebot\build\libs\minebot-rakslice-tooltweaks-1.11-13.19.1.2189.jar
     name: Minebot mod
-  - path: Minebot\build\libs\minebot-rakslice-1.11-13.19.1.2189-sources.jar
+  - path: Minebot\build\libs\minebot-rakslice-tooltweaks-1.11-13.19.1.2189-sources.jar
     name: Minebot source code
