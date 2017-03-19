@@ -15,7 +15,7 @@ build_script:
 #after_build:
 
 artifacts:
-  - path: Minebot\build\libs\minebot-1.0.jar
+  - path: Minebot\build\libs\minebot-foobar-1.0.jar
     name: Minebot mod
-  - path: Minebot\build\libs\minebot-1.0-sources.jar
+  - path: Minebot\build\libs\minebot-foobar-1.0-sources.jar
     name: Minebot source code
