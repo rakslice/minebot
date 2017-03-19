@@ -1,0 +1,21 @@
+# select the previous build image with known working MSYS2
+# os: Previous Visual Studio 2015
+
+version: 1.0.{build}
+platform: x64
+clone_folder: c:\project\src\minebot
+#clone_depth: 5
+
+build_script:
+- cmd: >-
+    cd c:\project\src\minebot\Minebot
+    
+    gradlew.bat build
+	
+#after_build:
+
+artifacts:
+  - path: c:\project\src\minebot\Minebot\build\libs\minebot-1.0.jar
+    name: Minebot mod
+  - path: c:\project\src\minebot\Minebot\build\libs\minebot-1.0-sources.jar
+    name: Minebot source code
