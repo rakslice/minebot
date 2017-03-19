@@ -9,9 +9,8 @@ clone_folder: c:\project\src\minebot
 build_script:
 - cmd: >-
     cd c:\project\src\minebot\Minebot
-    
-    gradlew.bat build
 
+    gradlew.bat build
 	
 #after_build:
 
