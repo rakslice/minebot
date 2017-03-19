@@ -11,7 +11,7 @@ build_script:
     cd c:\project\src\minebot\Minebot
 
     gradlew.bat build
-	
+
 #after_build:
 
 artifacts:
