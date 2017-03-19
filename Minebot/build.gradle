@@ -12,7 +12,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 compileJava.options.encoding = 'UTF-8'
 
-version = "1.0"
+version = "rakslice-1.11-13.19.1.2189"
 group= "net.rakslice.minebot" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "minebot"
 sourceSets.main{
